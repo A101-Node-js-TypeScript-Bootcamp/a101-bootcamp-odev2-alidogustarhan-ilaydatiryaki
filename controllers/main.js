@@ -5,6 +5,8 @@ const Joi = require("@hapi/joi");
 const axios = require("axios");
 const brand = require("../trendyol/trendyol_GetAll");
 const brandName = require("../trendyol/trendyol_GetOne");
+const category =require("../trendyol/trendyol_GetCategory");
+const category_single=require("../trendyol/trendyol_GetCategoryOne");
 
 const login = async (req, res) => {
   const schema = Joi.object({
@@ -50,8 +52,31 @@ const dashboard_marka = async (req, res) => {
   });
 };
 
+const dashboard_category = async (req, res) => {
+  const response_category = await category.fetchCategory();
+  let say_hello = req.user.username;
+  res.status(200).json({
+    msg: `Merhaba ${say_hello} İŞTE SİTEMİZDEKİ TÜM KATEGORİLER... `,
+    secret: response_category,
+  });
+};
+
+const dashboard_categoryOne = async (req, res) => {
+  let name = req.user.name;
+  let say_hello = req.user.username;
+  const response_id = await category_single.categorySingle(name);
+  res.status(200).json({
+    msg: `MERHABA ${say_hello} İŞTE ARADIĞIN SINGLE KATEGORİNİN TÜM ÜRÜNLERİ...`,
+    secret: response_id,
+  });
+};
+
+
+
 module.exports = {
   login,
   dashboard,
   dashboard_marka,
+  dashboard_category,
+  dashboard_categoryOne
 };
